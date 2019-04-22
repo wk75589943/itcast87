@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itcast.dao.stat.StatDao">
+
+    <!--获取厂家销量统计数据-->
+    <select id="getFactoryData" parameterType="string" resultType="java.util.HashMap">
+        SELECT factory_name name,SUM(amount) value FROM co_contract_product WHERE company_id = #{company_id} GROUP BY factory_name
+    </select>
+    <!--获取商品销量排行数据-->
+    <select id="getSellData" parameterType="string" resultType="map">
+        SELECT a.name,a.value FROM (
+            SELECT product_no name ,SUM(amount) value FROM co_contract_product WHERE company_id=#{company_id} GROUP BY product_no ORDER BY SUM(amount) DESC
+          ) a LIMIT 0,15
+    </select>
+
+    <!--获取商品销量排行数据-->
+    <select id="getOnlineData" parameterType="string" resultType="map">
+        SELECT info.a1 name, IFNULL(c.value,0) value FROM st_online_info info LEFT JOIN
+            (
+                SELECT  COUNT(id) value ,DATE_FORMAT(TIME,"%H") name FROM st_sys_log WHERE company_id=#{company_id}  GROUP BY DATE_FORMAT(TIME,"%H")
+            ) c
+        ON info.a1 = c.name
+    </select>
+</mapper>

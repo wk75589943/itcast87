@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="export_web_protal:war">
+    <output-path>$PROJECT_DIR$/export_web_protal/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>export_web_protal</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="export_web_protal.war">
+      <element id="artifact" artifact-name="export_web_protal:war exploded" />
+    </root>
+  </artifact>
+</component>

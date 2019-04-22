@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/jms
+        http://www.springframework.org/schema/jms/spring-jms.xsd
+		http://activemq.apache.org/schema/core
+        http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+    <bean id="emailProducer" class="cn.itcast.web.jms.EmailProducer"></bean>
+
+    <!--connectionFactory-->
+    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <constructor-arg name="brokerURL" value="tcp://127.0.0.1:61616/"></constructor-arg>
+    </bean>
+
+    <!--连接工厂管理器-->
+    <bean class="org.springframework.jms.connection.CachingConnectionFactory" id="cachingConnectionFactory">
+        <property name="targetConnectionFactory" ref="connectionFactory"></property>
+    </bean>
+
+    <!--消息提供者：jmsTemplate发送-->
+    <bean class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="cachingConnectionFactory"></property>
+    </bean>
+
+    <!--指定消息目的地：topic/queue-->
+    <bean id="emailQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg name="name" value="heima87-email"></constructor-arg>
+    </bean>
+</beans>
